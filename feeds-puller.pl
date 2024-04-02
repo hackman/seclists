@@ -11,8 +11,13 @@ use FeedBurner;
 
 # URLs of the RSS feeds
 my @rss = (
-	[ 'https://seclists.org/rss/oss-sec.rss', 'osssec.rss' ],
-	[ 'https://feeds.feedburner.com/GoogleOnlineSecurityBlog', 'google.rss' ]
+	[ 'atom', 'https://seclists.org/rss/oss-sec.rss', 'oss-sec' ],
+	[ 'atom', 'https://www.welivesecurity.com/en/rss/feed/', 'welive' ],
+	[ 'atom', 'https://feeds.feedburner.com/TheHackersNews', 'hn' ],
+	[ 'atom', 'https://isc.sans.edu/rssfeed.xml', 'isc' ],
+	[ 'atom', 'https://blog.sucuri.net/feed', 'sucuri' ],
+#	[ 'atom', 'https://cxsecurity.com/wlb/rss/exploit/', 'cx-exploit' ],
+	[ 'feedburner', 'https://feeds.feedburner.com/GoogleOnlineSecurityBlog', 'google' ]
 );
 
 my $json = 0;
@@ -21,13 +26,13 @@ my %previous_titles;
 
 $json = 1 if (defined($ARGV[0]) && $ARGV[0] eq 'json');
 
-atom_reader(\%previous_titles, 'https://seclists.org/rss/oss-sec.rss', 			'oss-sec');
-atom_reader(\%previous_titles, 'https://www.welivesecurity.com/en/rss/feed/',	'welive');
-atom_reader(\%previous_titles, 'https://feeds.feedburner.com/TheHackersNews',	'hn');
-atom_reader(\%previous_titles, 'https://isc.sans.edu/rssfeed.xml',				'isc');
-atom_reader(\%previous_titles, 'https://blog.sucuri.net/feed',					'sucuri');
-#atom_reader(\%previous_titles, 'https://cxsecurity.com/wlb/rss/exploit/',		'cx-exploit');
-feedburner(\%previous_titles,	'https://feeds.feedburner.com/GoogleOnlineSecurityBlog', 'google');
+foreach my $feed(@rss) {
+	if ($feed->[0] eq 'atom') {
+		atom_reader(\%previous_titles, $feed->[1], $feed->[2]);
+	} elsif ($feed->[0] eq 'feedburner') {
+		feedburner(\%previous_titles, $feed->[1], $feed->[2]);
+	}
+}
 
 my @ordered_titles = sort { $previous_titles{$b}{date} <=> $previous_titles{$a}{date} } keys %previous_titles;
 
