@@ -1,3 +1,5 @@
+The actual feed can be found here: http://security.1h.cx
+
 This is a tool to aggregate multiple different security news RSS feeds and sites.
 
 I made this in order to simplify significantly the way I review security information on a daily basis.
