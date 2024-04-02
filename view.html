@@ -131,6 +131,7 @@ function unixTimestampToReadable(timestamp) {
 			// Article title and link
 			const titleLink = document.createElement('a');
 			titleLink.href = article.link;
+			titleLink.target = "_new";
 			titleLink.textContent = unixTimestampToReadable(article.date) + " " + article.title;
 			titleLink.classList.add('article-link'); // Add class for styling
 			listItem.appendChild(titleLink);
