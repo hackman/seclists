@@ -3,13 +3,27 @@ package Cache;
 use strict;
 use warnings;
 use Exporter;
-use LWP::Simple;
+use LWP::UserAgent;
 use XML::Simple;
 use File::stat;
 
 our @ISA        = qw(Exporter);
 our @EXPORT     = qw(update_cache check_cache fetch_xml);
 our $VERSION    = 0.00;
+
+sub web_request {
+	my $url = shift;
+	my $ua = new LWP::UserAgent;
+	$ua->agent('HackMan feed puller');
+	my $req = new HTTP::Request 'GET' => $url;
+	my $res = $ua->request($req);
+
+	if ($res->is_success) {
+		return $res->content;
+	} else {
+		return;
+	}
+}
 
 sub update_cache {
 	my ($file, $content) = @_;
@@ -35,7 +49,7 @@ sub check_cache {
 		close $f;
 	} else {
 		# Fetch new content and update cache
-		$content = get($rss_url);
+		$content = web_request($rss_url);
 		update_cache($cache_file, $content) if defined $content;
 	}
 	return $content;
