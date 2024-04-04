@@ -2,15 +2,22 @@ https://seclists.org/rss/oss-sec.rss
 https://feeds.feedburner.com/GoogleOnlineSecurityBlog
 https://feeds.feedburner.com/TheHackersNews
 https://www.welivesecurity.com/en/rss/feed/
+https://isc.sans.edu/rssfeed.xml
 https://cxsecurity.com/wlb/rss/exploit/
 https://cxsecurity.com/cverss/fullmap/
-https://isc.sans.edu/rssfeed.xml
-https://www.wordfence.com/vulnerability-advisories/
 https://packetstormsecurity.com/feeds
 https://blog.sucuri.net/feed
-https://vuldb.com/?live.updates
 https://blog.cpanel.com/category/security/?feed=rss2
 
+HTML scraper needed
+https://vuldb.com/?live.updates
+https://www.wordfence.com/vulnerability-advisories/
 https://blog.whmcs.com/
 https://blog.cloudlinux.com/
 slashdot.org
+
+https://nodejs.org/en/blog/vulnerability
+https://httpd.apache.org/security/vulnerabilities_24.html
+https://nginx.org/en/security_advisories.html
+https://exim.org/static/doc/security/
+
