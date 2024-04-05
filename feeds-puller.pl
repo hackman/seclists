@@ -54,10 +54,8 @@ foreach my $feed(@rss) {
 my @ordered_titles = sort { $previous_titles{$b}{date} <=> $previous_titles{$a}{date} } keys %previous_titles;
 
 if ($json) {
-	print "[\n";
-	my $prev_element = 0;
+	my @json = ();
 	foreach my $t (@ordered_titles) {
-		print ",\n" if ($prev_element);
 		my %line = (
 			"link"  => $previous_titles{$t}{'links'}[0],
 			"title" => encode('UTF-8', $t),
@@ -65,10 +63,9 @@ if ($json) {
 			"date"  => $previous_titles{$t}{'date'},
 			"description" => $previous_titles{$t}{'description'}
 		);
-		print encode_json(\%line);
-		$prev_element = 1;
+		push @json, \%line;
 	}
-	print "]\n";
+	print encode_json(\@json);
 } else {
 	foreach my $t (@ordered_titles) {
 		printf "%s %s \n", $previous_titles{$t}{group}, encode('UTF-8', $t);
