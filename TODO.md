@@ -6,3 +6,6 @@ Future work
 # Fix the wrong group icon issue, caused by similarity mismatch
 # Improve the similarity match
 # Send new notifications to irc.libera.net
+# Add proper parser for the Debian, Ubuntu and RedHat security advisories
+# Parse the ISC stormcast news and display the relevant information instead of: ISC Stormcat for Friday
+
