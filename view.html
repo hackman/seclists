@@ -78,123 +78,145 @@
       cursor: pointer;
     }
   </style>
-</head>
-<body>
-  <ul id="articleList" class="article-list"></ul>
-
-  <!-- Popup HTML -->
-  <div class="popup" id="popup">
-    <span class="popup-close" id="popupClose">&times;</span>
-    <div id="popupContent"></div>
-  </div>
-
   <script>
+var jsonData = '';
+
 // Function to convert Unix timestamp to human-readable format
 function unixTimestampToReadable(timestamp) {
     // Create a new Date object with the Unix timestamp multiplied by 1000 to convert to milliseconds
     const date = new Date(timestamp * 1000);
 
     // Get individual date and time components
-    const year = date.getFullYear();
-    const month = ('0' + (date.getMonth() + 1)).slice(-2); // Months are zero-based
-    const day = ('0' + date.getDate()).slice(-2);
-    const hours = ('0' + date.getHours()).slice(-2);
+    const year    = date.getFullYear();
+    const month   = ('0' + (date.getMonth() + 1)).slice(-2); // Months are zero-based
+    const day     = ('0' + date.getDate()).slice(-2);
+    const hours   = ('0' + date.getHours()).slice(-2);
     const minutes = ('0' + date.getMinutes()).slice(-2);
     const seconds = ('0' + date.getSeconds()).slice(-2);
 
-    // Construct the human-readable date and time format
-    const formattedDateTime = day + '-' + month + '-' + year + ' ' + hours + ':' + minutes + ':' + seconds;
-
-    return formattedDateTime;
+	return day + '-' + month + '-' + year + ' ' + hours + ':' + minutes + ':' + seconds;
 }
-    document.addEventListener("DOMContentLoaded", function() {
-      const popup = document.getElementById('popup');
 
-      // Function to fetch data via AJAX
-      function fetchData() {
-        const xhr = new XMLHttpRequest();
-        xhr.onreadystatechange = function() {
-          if (xhr.readyState === XMLHttpRequest.DONE) {
-            if (xhr.status === 200) {
-              const jsonData = JSON.parse(xhr.responseText);
-              displayData(jsonData);
-            } else {
-              console.error('Failed to fetch data');
-            }
-          }
-        };
-        xhr.open('GET', '/data.json'); // Changed URL here
-        xhr.send();
-      }
+// Show popup function
+function showPopup(description, clientX, clientY) {
+	const popup  = document.getElementById('popup');
+	const popupContent = document.getElementById('popupContent');
+	const popupClose = document.getElementById('popupClose');
 
-      // Function to display data
-      function displayData(data) {
-        const list = document.getElementById('articleList');
-
-		for (var i = 0; i < data.length; i++) {
-			article = data[i];
-			const listItem = document.createElement('li');
-			listItem.classList.add('article-item');
-			// Group icon based on group
-			groupIcon = document.createElement('img');
-			groupIcon.classList.add('group-icon');
-			groupIcon.src = "/logos/" + article.group + ".png";
-			listItem.appendChild(groupIcon);
-
-			// Article title and link
-			const titleLink = document.createElement('a');
-			titleLink.href = article.link;
-			titleLink.target = "_new";
-			titleLink.textContent = unixTimestampToReadable(article.date) + " " + article.title;
-			titleLink.classList.add('article-link'); // Add class for styling
-			listItem.appendChild(titleLink);
-
-
-			const description = article.description;
-			// Add event listener for popup
-			listItem.addEventListener('click', function(event) {
-				event.stopPropagation(); // Prevent event from bubbling up
-				showPopup(description);
-			});
-
-			// Append to list
-			list.appendChild(listItem);
+	// Calculate popup position and size
+//	const popupWidth = Math.min(window.innerWidth * 0.7, popup.offsetWidth); // 70% of window width or actual width if smaller
+	// Dynamic height
+	lines =  description.split(/\r\n|\r|\n/).length;
+	var popupHeight = 550;
+	if (lines <= 50) {
+		popupHeight = (lines * 50) + 50;
+		// 50px for each line and 50 more for the heading
+		if (lines < 5) {
+			len = description.length;
+			if (len > 300) {
+				// on every 150chars we will add 50px
+				popupHeight = ((len / 150) * 50) + 50;
+			}
 		}
 	}
-      // Show popup function
-      function showPopup(description, clientX, clientY) {
-        const popupContent = document.getElementById('popupContent');
-        const popupClose = document.getElementById('popupClose');
 
-        // Calculate popup position and size
-        const popupWidth = Math.min(window.innerWidth * 0.7, popup.offsetWidth); // 70% of window width or actual width if smaller
-        const popupHeight = Math.min(window.innerHeight * 0.7, popup.offsetHeight); // 70% of window height or actual height if smaller
-        const popupLeft = Math.max(0, Math.min(clientX - popupWidth / 2, window.innerWidth - popupWidth)); // Center horizontally
-        const popupTop = Math.max(0, Math.min(clientY - popupHeight, window.innerHeight - popupHeight)); // Position above cursor
+	// Set popup position and size
+//	popup.style.width  = popupWidth + 'px';
+	popup.style.height = popupHeight + 'px';
+	popupContent.style.height = popupHeight + 'px';
+	popupContent.innerHTML= description;
+	popup.style.display = 'block';
 
-        // Set popup position and size
-//        popup.style.width = popupWidth + 'px';
-        popup.style.height = popupHeight + 'px';
-//        popup.style.left = popupLeft + 'px';
-//        popup.style.top = popupTop + 'px';
+	// Close popup on click outside or on close button
+	window.addEventListener('click', function(event) {
+		if (event.target == popup || event.target == popupClose)
+			popup.style.display = 'none';
+	});
+}
 
-        popupContent.innerHTML= description;
-        popup.style.display = 'block';
-//        popup.style.left = clientX + 'px';
-//        popup.style.top = (clientY - popup.offsetHeight) + 'px';
+// Function to fetch data via AJAX
+function fetchData() {
+	const xhr = new XMLHttpRequest();
+	xhr.onreadystatechange = function() {
+		if (xhr.readyState === XMLHttpRequest.DONE) {
+			if (xhr.status === 200) {
+				jsonData = JSON.parse(xhr.responseText);
+				displayData(jsonData);
+			} else {
+				console.error('Failed to fetch data');
+			}
+		}
+	};
+	xhr.open('GET', '/data.json'); // Changed URL here
+	xhr.send();
+}
 
-        // Close popup on click outside or on close button
-        window.addEventListener('click', function(event) {
-          if (event.target == popup || event.target == popupClose) {
-            popup.style.display = 'none';
-          }
-        });
-      }
+// Function to display data
+function displayData(data) {
+	const list = document.getElementById('articleList');
+	let last_item = null;
+	for (var i = 0; i < data.length; i++) {
+		article = data[i];
+		const listItem = document.createElement('li');
+		listItem.classList.add('article-item');
+		// Group icon based on group
+		groupIcon = document.createElement('img');
+		groupIcon.classList.add('group-icon');
+		groupIcon.src = "/logos/" + article.group + ".png";
+		listItem.appendChild(groupIcon);
 
-      // Fetch data on page load
-      fetchData();
-    });
+		// Article title and link
+		let link_text = unixTimestampToReadable(article.date) + " ";
+		if (article.group == "ps-linux" || article.group == "ps-redhat") {
+			link_text += article.description;
+			link_text = link_text.replace(/Red Hat Security Advisory [0-9]+\-[0-9]+\-[0-9]+ \-/, "");
+		} else {
+			link_text += article.title;
+		}
+		const titleLink = document.createElement('a');
+		titleLink.href = article.link;
+		titleLink.target = "_new";
+		titleLink.textContent = link_text;
+		titleLink.classList.add('article-link'); // Add class for styling
+		listItem.appendChild(titleLink);
+
+		let description = article.title + "<br /><hr />";
+		if (article.description !== null)
+			description += article.description;
+
+		// Add event listener for popup
+		listItem.addEventListener('click', function(event) {
+			event.stopPropagation(); // Prevent event from bubbling up
+			showPopup(description);
+		});
+
+		// Add an empty line when the day changes
+		cur_date = new Date(article.date * 1000);
+		day = cur_date.getDate();
+		article.day = day;
+		if (last_item !== null && last_item.day != article.day) {
+			const empty_line = document.createElement('li');
+			empty_line.classList.add('empty-line');
+			list.appendChild(empty_line);
+		}
+		list.appendChild(listItem);
+
+		last_item = article;
+
+	}
+}
+
+document.addEventListener("DOMContentLoaded", function() {fetchData()});
   </script>
+</head>
+<body>
+  <ul id="articleList" class="article-list"></ul>
+
+  <!-- Popup for the description of the article -->
+  <div class="popup" id="popup">
+    <span class="popup-close" id="popupClose">&times;</span>
+    <div class="popup-content-wrapper" id="popupContent"></div>
+  </div>
+
 </body>
 </html>
-
