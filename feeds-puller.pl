@@ -6,6 +6,7 @@ use Encode;
 use JSON::XS;
 use Data::Dumper;
 use lib 'lib/Feeds';
+use Rss;
 use Atom;
 use FeedBurner;
 
@@ -38,10 +39,14 @@ my @rss = (
 );
 
 my $json = 0;
+my $xml = 0;
 # Track titles of previous entries
 my %previous_titles;
+my $rss_file = 'feed.xml';
+my $json_file = 'data.json';
 
 $json = 1 if (defined($ARGV[0]) && $ARGV[0] eq 'json');
+$xml  = 1 if (defined($ARGV[0]) && $ARGV[0] eq 'xml');
 
 foreach my $feed(@rss) {
 	if ($feed->[0] eq 'atom') {
@@ -65,9 +70,14 @@ if ($json) {
 		);
 		push @json, \%line;
 	}
-	print encode_json(\@json);
+	open my $out, '>', $json_file or die "Unable to write to $json_file: $!\n";
+	print $out encode_json(\@json);
+	close $out;
+} elsif ($xml) {
+	generate_rss_feed($rss_file, \@ordered_titles, \%previous_titles);
 } else {
 	foreach my $t (@ordered_titles) {
 		printf "%s %s \n", $previous_titles{$t}{group}, encode('UTF-8', $t);
 	}
 }
+
