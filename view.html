@@ -10,6 +10,16 @@
       background-color: #2c193f; /* Dark purple background */
       color: #fff; /* Light text */
     }
+	.empty-line {
+      margin-bottom: 5px; /* Reduced margin */
+      padding: 5px;
+      border-radius: 3px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      transition: background-color 0.3s ease;
+	  background-color: #03002d;
+      position: relative; /* Position relative for popup */
+	  width: 70%;
+	}
     .article-list {
       list-style-type: none;
 	  padding-left: 30px;
@@ -44,7 +54,7 @@
     /* Popup styles */
     .popup {
       display: none;
-      position: absolute;
+      position: fixed;
       background-color: rgba(0, 0, 0, 0.8);
       color: #fff;
 	  top: 10px;
@@ -52,12 +62,15 @@
       border-radius: 5px;
       padding: 20px;
 	  width: 500px;
-	  min-height: 550px;
-      max-width: 70%;
-      max-height: 70vh;
-      overflow-y: auto;
+	  min-height: 70px;
       z-index: 999; /* Ensure popup is on top */
     }
+	.popup-content-wrapper {
+	  min-height: 70px;
+	  min-width: 400px;
+	  max-height: 90vh; /* Adjust based on your needs, considering padding and button size */
+	  overflow-y: auto;
+	}
     .popup-close {
       position: absolute;
       top: 5px;
