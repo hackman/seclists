@@ -206,7 +206,13 @@ function displayData(data) {
 	}
 }
 
+function closePopupOnEsc(event) {
+	if (event.key === 'Escape')
+		popup.style.display = 'none';
+}
+
 document.addEventListener("DOMContentLoaded", function() {fetchData()});
+document.addEventListener('keydown', closePopupOnEsc);
   </script>
 </head>
 <body>
