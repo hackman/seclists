@@ -4,3 +4,4 @@ On Debian 12
  cpanm -n JSON::XS
  cpanm -n LWP::Simple
  cpanm -n XML::Simple
+ cpanm -n XML::Writer
