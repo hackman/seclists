@@ -24,6 +24,7 @@ sub main {
 sub atom_reader {
 	my ($titles_ref, $url, $group) = @_;
 	my $rss_data = fetch_xml($url, 'cache/' . $group . '.rss');
+	my $now = time();
 
 	# Extract relevant information and check similarity
 	foreach my $item (@{$rss_data->{channel}->{item}}) {
@@ -32,10 +33,12 @@ sub atom_reader {
 		my $description = $item->{description};
 		my $date = '';
 		if ($item->{pubDate} =~ /[A-Z]$/) {
-			$date 		= Time::Piece->strptime($item->{pubDate}, "%a, %d %b %Y %H:%M:%S %Z");
+			$date = Time::Piece->strptime($item->{pubDate}, "%a, %d %b %Y %H:%M:%S %Z");
 		} else {
-			$date 		= Time::Piece->strptime($item->{pubDate}, "%a, %d %b %Y %H:%M:%S %z");
+			$date = Time::Piece->strptime($item->{pubDate}, "%a, %d %b %Y %H:%M:%S %z");
 		}
+		# Do not check items older then 1y
+		next if ($date->epoch < $now - 31536000);
 
 		# Parse words in the title and cleanup reply/forwarder subject
 		$title =~ s/^.*(Re:|Fwd:)+ ?//;
