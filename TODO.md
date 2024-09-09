@@ -1,4 +1,5 @@
 Future work
+# Add an option to select which feeds you want to see. By default it should have all marked. Save the setting in a cookie.
 # Add HTML parsers for the other websites
 # Separate the data.json by weeks and add calendar , next & back buttons
 # Generate better CSS for mobile
