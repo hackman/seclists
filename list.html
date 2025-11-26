@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Security News</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #2c193f; /* Dark purple background */
+      color: #fff; /* Light text */
+    }
+	.empty-line {
+      margin-bottom: 5px; /* Reduced margin */
+      padding: 5px;
+      border-radius: 3px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      transition: background-color 0.3s ease;
+	  background-color: #03002d;
+      position: relative; /* Position relative for popup */
+	  width: 70%;
+	}
+    .article-list {
+      list-style-type: none;
+	  padding-left: 30px;
+    }
+    .article-item {
+      margin-bottom: 5px; /* Reduced margin */
+      padding: 5px;
+      border-radius: 3px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      transition: background-color 0.3s ease;
+      background-color: #443266; /* Darker purple background */
+      position: relative; /* Position relative for popup */
+	  width: 70%;
+    }
+    .article-item:hover {
+      background-color: #553f7b; /* Darker background on hover */
+    }
+    .group-icon {
+      width: 20px;
+      height: 20px;
+      margin-right: 8px;
+    }
+    .article-link {
+      color: #77cc08; /* Blue color */
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+    .article-link:hover {
+      color: #00aaff; /* Lighter blue on hover */
+      text-decoration: underline;
+    }
+    /* Popup styles */
+    .popup {
+      display: none;
+      position: fixed;
+      background-color: rgba(0, 0, 0, 0.8);
+      color: #fff;
+	  top: 10px;
+	  right: 20px;
+      border-radius: 5px;
+      padding: 20px;
+	  width: 500px;
+	  min-height: 70px;
+      z-index: 999; /* Ensure popup is on top */
+    }
+	.popup-content-wrapper {
+	  min-height: 70px;
+	  min-width: 400px;
+	  max-height: 90vh; /* Adjust based on your needs, considering padding and button size */
+	  overflow-y: auto;
+	}
+    .popup-close {
+      position: absolute;
+      top: 5px;
+      left: 10px;
+      cursor: pointer;
+    }
+    .footer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background-color: #443266; /* Darker purple background */
+      color: #fff;
+      padding: 5px 5px;
+      text-align: center;
+    }
+    .footer a {
+      color: #fff;
+      text-decoration: none;
+      margin: 0 10px;
+    }
+    .footer a img {
+      width: 20px;
+      height: 20px;
+      vertical-align: middle;
+      margin-right: 5px;
+    }
+  </style>
+</head>
+<body>
+	<h2> Already included </h2>
+  <ul id="articleList" class="article-list">
+	<li class="article-item"><a class="article-link" href="https://seclists.org/rss/oss-sec.rss">https://seclists.org/rss/oss-sec.rss</a></li>
+	<li class="article-item"><a class="article-link" href="https://feeds.feedburner.com/GoogleOnlineSecurityBlog">https://feeds.feedburner.com/GoogleOnlineSecurityBlog</a></li>
+	<li class="article-item"><a class="article-link" href="https://feeds.feedburner.com/TheHackersNews">https://feeds.feedburner.com/TheHackersNews</a></li>
+	<li class="article-item"><a class="article-link" href="https://www.welivesecurity.com/en/rss/feed/">https://www.welivesecurity.com/en/rss/feed/</a></li>
+	<li class="article-item"><a class="article-link" href="https://isc.sans.edu/rssfeed.xml">https://isc.sans.edu/rssfeed.xml</a></li>
+	<li class="article-item"><a class="article-link" href="https://cxsecurity.com/wlb/rss/exploit/">https://cxsecurity.com/wlb/rss/exploit/</a></li>
+	<li class="article-item"><a class="article-link" href="https://cxsecurity.com/cverss/fullmap/">https://cxsecurity.com/cverss/fullmap/</a></li>
+	<li class="article-item"><a class="article-link" href="https://packetstormsecurity.com/feeds">https://packetstormsecurity.com/feeds</a></li>
+	<li class="article-item"><a class="article-link" href="https://blog.sucuri.net/feed">https://blog.sucuri.net/feed</a></li>
+	<li class="article-item"><a class="article-link" href="https://blog.cpanel.com/category/security/?feed=rss2">https://blog.cpanel.com/category/security/?feed=rss2</a></li>
+	</ul>
+	<h2> Work in progress </h2>
+  <ul id="articleList" class="article-list">
+	<li class="article-item"><a class="article-link" href="https://vuldb.com/?live.updates">https://vuldb.com/?live.updates</a></li>
+	<li class="article-item"><a class="article-link" href="https://www.wordfence.com/vulnerability-advisories/">https://www.wordfence.com/vulnerability-advisories/</a></li>
+	<li class="article-item"><a class="article-link" href="https://blog.whmcs.com/">https://blog.whmcs.com/</a></li>
+	<li class="article-item"><a class="article-link" href="https://blog.cloudlinux.com/">https://blog.cloudlinux.com/</a></li>
+	<li class="article-item"><a class="article-link" href="slashdot.org">slashdot.org</a></li>
+	<li class="article-item"><a class="article-link" href="https://nodejs.org/en/blog/vulnerability">https://nodejs.org/en/blog/vulnerability</a></li>
+	<li class="article-item"><a class="article-link" href="https://httpd.apache.org/security/vulnerabilities_24.html">https://httpd.apache.org/security/vulnerabilities_24.html</a></li>
+	<li class="article-item"><a class="article-link" href="https://nginx.org/en/security_advisories.html">https://nginx.org/en/security_advisories.html</a></li>
+	<li class="article-item"><a class="article-link" href="https://exim.org/static/doc/security/">https://exim.org/static/doc/security/</a></li>
+  </ul>
+  <a class="article-link" href="/">Back to feed</a>
+
+  <div class="footer">
+    <a href="/list.html" target="_blank"><img src="logos/list.png" alt="List of all feeds that are collected">Feeds list</a>
+    <a href="https://github.com/hackman/seclists" target="_blank"><img src="logos/github.png" alt="GitHub">GitHub</a>
+    <a href="/rss.xml" target="_blank"><img src="logos/rss.png" alt="RSS Feed">RSS Feed</a>
+    <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank"><img src="logos/cc-by-sa.png" style="width: 57px" alt="CC-BY-SA License"></a>
+  </div>
+</body>
+</html>
