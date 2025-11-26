@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/perl -T
 
 use strict;
 use warnings;
@@ -17,6 +17,12 @@ my @rss = (
 	[ 'atom', 'https://feeds.feedburner.com/TheHackersNews', 'hn' ],
 	[ 'atom', 'https://isc.sans.edu/rssfeed.xml', 'isc' ],
 	[ 'atom', 'https://blog.sucuri.net/feed', 'sucuri' ],
+	[ 'atom', 'https://cxsecurity.com/wlb/rss/exploit/', 'cx-exploit' ],
+	[ 'atom', 'https://blog.sucuri.net/feed', 'sucuri' ],
+	[ 'atom', 'https://blog.cpanel.com/category/security/feed/', 'cpanel' ],
+	[ 'atom', 'https://vuldb.com/?rss.recent', 'vuldb' ],
+	[ 'atom', 'https://www.bleepingcomputer.com/feed/', 'bleeping' ],
+	[ 'atom', 'https://securityonline.info/feed/', 'seconline' ],
 	[ 'atom', 'https://rss.packetstormsecurity.com/files/tags/exploit/', 'ps-exploit' ],
 	[ 'atom', 'https://rss.packetstormsecurity.com/files/tags/php/', 'ps-php' ],
 	[ 'atom', 'https://rss.packetstormsecurity.com/files/tags/perl/', 'ps-perl' ],
@@ -31,10 +37,6 @@ my @rss = (
 	[ 'atom', 'https://rss.packetstormsecurity.com/files/os/apple/', 'ps-apple' ],
 	[ 'atom', 'https://rss.packetstormsecurity.com/files/os/redhat/', 'ps-redhat' ],
 	[ 'atom', 'https://rss.packetstormsecurity.com/files/os/windows/', 'ps-win' ],
-	[ 'atom', 'https://cxsecurity.com/wlb/rss/exploit/', 'cx-exploit' ],
-	[ 'atom', 'https://cxsecurity.com/cverss/fullmap/', 'cx-cve' ],
-	[ 'atom', 'https://blog.sucuri.net/feed', 'sucuri' ],
-	[ 'atom', 'https://blog.cpanel.com/category/security/feed/', 'cpanel' ],
 	[ 'feedburner', 'https://feeds.feedburner.com/GoogleOnlineSecurityBlog', 'google' ]
 );
 
@@ -42,13 +44,14 @@ my $json = 0;
 my $xml = 0;
 # Track titles of previous entries
 my %previous_titles;
-my $rss_file = 'feed.xml';
+my $rss_file = 'rss.xml';
 my $json_file = 'data.json';
 
 $json = 1 if (defined($ARGV[0]) && $ARGV[0] eq 'json');
 $xml  = 1 if (defined($ARGV[0]) && $ARGV[0] eq 'xml');
 
 foreach my $feed(@rss) {
+	print "Reading feed $feed->[1]\n";
 	if ($feed->[0] eq 'atom') {
 		atom_reader(\%previous_titles, $feed->[1], $feed->[2]);
 	} elsif ($feed->[0] eq 'feedburner') {
@@ -57,12 +60,11 @@ foreach my $feed(@rss) {
 }
 
 my @ordered_titles = sort { $previous_titles{$b}{date} <=> $previous_titles{$a}{date} } keys %previous_titles;
-
 if ($json) {
 	my @json = ();
 	foreach my $t (@ordered_titles) {
 		my %line = (
-			"link"  => $previous_titles{$t}{'links'}[0],
+			"links"  => $previous_titles{$t}{'links'},
 			"title" => encode('UTF-8', $t),
 			"group" => $previous_titles{$t}{'group'},
 			"date"  => $previous_titles{$t}{'date'},
